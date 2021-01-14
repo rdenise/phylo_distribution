@@ -9,27 +9,18 @@
 ##########################################################################################
 ##########################################################################################
 
-import sys, os
-
 import pandas as pd
 import numpy as np
 
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.colors import ListedColormap
 from matplotlib.cm import ScalarMappable
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import matplotlib.patches as mpatches
-import shutil
-import time
-import requests
 
 from Bio import Phylo
 
-pd.set_option('max_colwidth', 400)
-
 import seaborn as sns ; sns.set_style("ticks") 
-import matplotlib.pyplot as plt
 
 ##########################################################################################
 ##########################################################################################
