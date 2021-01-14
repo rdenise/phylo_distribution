@@ -8,11 +8,11 @@ Python 3.8
 
 ### Libraries
 
-pandas==1.2.0
-numpy==1.18.3
-matplotlib==3.3.3
-biopython==1.76
-seaborn==0.11.1
+pandas==1.2.0  
+numpy==1.18.3  
+matplotlib==3.3.3  
+biopython==1.76  
+seaborn==0.11.1  
 
 ## Input format
 
@@ -24,16 +24,16 @@ Need to have a column with an identifier for the genome (chromosome or plasmid) 
 
 #### Exemple
 
-Replicon_name	Gene
-ACAC001.D.00001.C001	serC
-ACAC001.D.00001.C001	pdxP
-ACAC001.D.00001.P002	yggS
-ACAC001.D.00001.P002	DXS
-BAMY001.D.00002.C001	pdxP
-BAMY001.D.00002.C001	pdxS
-BAMY001.D.00002.C001	pdxT
-BAMY001.D.00003.C001	pdxT
-BAMY001.D.00003.C001	pdxS
+Replicon_name	Gene  
+ACAC001.D.00001.C001	serC  
+ACAC001.D.00001.C001	pdxP  
+ACAC001.D.00001.P002	yggS  
+ACAC001.D.00001.P002	DXS  
+BAMY001.D.00002.C001	pdxP  
+BAMY001.D.00002.C001	pdxS  
+BAMY001.D.00002.C001	pdxT  
+BAMY001.D.00003.C001	pdxT  
+BAMY001.D.00003.C001	pdxS  
 
 ### INFO_TAB
 
@@ -43,11 +43,11 @@ The information needed is the same identifier for the genome (chromosome or plas
 
 #### Exemple
 
-Replicon_name	Species_Id	Lineage
-ACAC001.D.00001.C001	ACAC001.D.00001	Bacteria;Actinobacteria;Propionibacteriales;Propionibacteriaceae;Acidipropionibacterium
-ACAC001.D.00001.P002	ACAC001.D.00001	Bacteria;Actinobacteria;Propionibacteriales;Propionibacteriaceae;Acidipropionibacterium
-BAMY001.D.00002.C001	BAMY001.D.00002	Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;Bacillus cereus group
-BAMY001.D.00003.C001	BAMY001.D.00003	Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;Bacillus cereus group
+Replicon_name	Species_Id	Lineage  
+ACAC001.D.00001.C001	ACAC001.D.00001	Bacteria;Actinobacteria;Propionibacteriales;Propionibacteriaceae;Acidipropionibacterium  
+ACAC001.D.00001.P002	ACAC001.D.00001	Bacteria;Actinobacteria;Propionibacteriales;Propionibacteriaceae;Acidipropionibacterium  
+BAMY001.D.00002.C001	BAMY001.D.00002	Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;Bacillus cereus group  
+BAMY001.D.00003.C001	BAMY001.D.00003	Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;Bacillus cereus group  
 
 
 ### Tree file 
