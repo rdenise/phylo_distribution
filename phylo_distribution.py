@@ -118,11 +118,6 @@ figure_option.add_argument("-width",'--width',
                             type=int,
                             default=12,
                             help="Total width of the figure in point (default: 12)")
-figure_option.add_argument("-p",'--prettify',
-                            action='store_true',
-                            dest="prettify",
-                            help='Allow the use of a try to prettify the figure in case the leaf tree are in the number of genome',
-                            default=False)
 figure_option.add_argument("-color",'--color_heatmap',
                             metavar=("<COLOR>"),
                             dest="color_heatmap",
@@ -159,7 +154,6 @@ BASE_SPAN = args.base_span
 HEIGHT = args.height
 WIDTH = args.width
 COLOR = args.color_heatmap
-PRETTIFY = args.prettify
 
 ##########################################################################################
 # Needed in case of bugs
@@ -175,8 +169,7 @@ def main():
                          size=SIZE,
                          main_rowspan = MAIN_ROWSPAN, tree_colspan = TREE_COLSPAN, 
                          heatmap_colspan = HEATMAP_COLSPAN, barplot_rowspan = BARPLOT_ROWSPAN, 
-                         base_span = BASE_SPAN,
-                         prettify=PRETTIFY, height=HEIGHT, width=WIDTH
+                         base_span = BASE_SPAN, height=HEIGHT, width=WIDTH
                         )
 
 ##########################################################################################
