@@ -543,6 +543,12 @@ def make_figure_distribution(file_output, report_like, column_pivot, order_colum
     # Read INFO_TAB
     info_df = pd.read_table(INFO_TAB)
 
+    info_df = info_df.replace({'Candidatus Gracilibacteria':'CPR',
+                               'Candidatus Saccharibacteria':'CPR',
+                               'Candidatus Bipolaricaulota':'Bipolaricaulota',
+                               'Candidatus Cloacimonetes':'Cloacimonetes',
+                               'Candidatus Dependentiae':'Dependentiae'})
+
     # Read report_like
     report_df = pd.read_table(report_like)
 
