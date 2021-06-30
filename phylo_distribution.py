@@ -142,6 +142,10 @@ else :
 
 ##########################################################################################
 
+create_folder(os.path.dirname(OUTPUT))
+
+##########################################################################################
+
 REPORT = args.report
 COLUMN = args.columns_distribution
 INFO_TAB = args.infotab
