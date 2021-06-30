@@ -54,7 +54,7 @@ BAMY001.D.00003.C001	BAMY001.D.00003	Bacteria;Firmicutes;Bacilli;Bacillales;Baci
 
 A tree of the phyla you want to plot the distribution against in newick format. The phyla need to be present in the lineage of the genomes present in your database.
 
-##### Exemple 
+#### Exemple 
 
 ((Phylum_A,Phylum_B),(Phylum_C,Phylum_D),Phylum_E)
 
@@ -112,8 +112,6 @@ Figure options:
                         Total height of the figure in point (default: 10)
   -width <INT>, --width <INT>
                         Total width of the figure in point (default: 12)
-  -p, --prettify        Allow the use of a try to prettify the figure in case the leaf tree are in the number of
-                        genome
   -color <COLOR>, --color_heatmap <COLOR>
                         Color of the gradient in the heatmap (default: red)
 ```

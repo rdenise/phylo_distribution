@@ -466,7 +466,7 @@ def create_countdf(INFO_TAB, wanted_phylum) :
 ##########################################################################################
 
 def make_figure_distribution(file_output, report_like, column_pivot, order_columns, INFO_TAB, file_tree, size='xx-small', rotation=0, 
-                            main_rowspan = 5, tree_colspan = 2, heatmap_colspan = 8, barplot_rowspan = 1, base_span = 1, prettify = True,
+                            main_rowspan = 5, tree_colspan = 2, heatmap_colspan = 8, barplot_rowspan = 1, base_span = 1,
                             width=15, height=10, color='red') :
     
     '''
@@ -499,24 +499,17 @@ def make_figure_distribution(file_output, report_like, column_pivot, order_colum
     :type: int
     :param base_span: Number of columns or row a figure is span by default (mostly for the legend and the number of genomes)
     :type: int
-    :param prettify: Allow the figure to add a span of 1 between the tree and the number of genome 
-    :type: bool
     :param width: Width total of the figure in point
     :type: int 
     :param height: Height total of the figure in point
     :params color: Color of the heatmap
     :type: color in str, rgb or hex
     '''
-
-    if prettify :
-        add_span = 2
-    else :
-        add_span = 0
     
     fig = plt.figure(figsize=(width,height))
 
     nrow = barplot_rowspan + main_rowspan
-    ncol = base_span + tree_colspan + heatmap_colspan + add_span
+    ncol = base_span + tree_colspan + heatmap_colspan
 
     ax1 = plt.subplot2grid(shape = (nrow, ncol), 
                            loc = (0,0), 
@@ -579,6 +572,8 @@ def make_figure_distribution(file_output, report_like, column_pivot, order_colum
     # Draw proportion
     proportion_proteobacteria(report_df, report_pivot.columns, ax5, column_pivot, size=size)
 
+    plt.tight_layout()
+    
     plt.savefig(file_output)
 
 
