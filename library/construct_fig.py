@@ -395,7 +395,7 @@ def Phylum_wanted_search(x, *wanted_phylum) :
     """
 
     a = list(set(x.Lineage.replace(' ', ';').split(';')) & set(wanted_phylum))
-    return a[0] if a else x.Phylum
+    return a[0] if a else 'phylum_not_in_list'
 
 ##########################################################################################
 ##########################################################################################
