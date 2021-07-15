@@ -17,6 +17,7 @@ from matplotlib.colors import ListedColormap
 from matplotlib.cm import ScalarMappable
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import matplotlib.patches as mpatches
+import matplotlib.gridspec as gridspec
 
 from Bio import Phylo
 
@@ -162,13 +163,15 @@ def heatmap_df(report_pivot, count_df, list_wanted, ax, size='xx-small', rotatio
     new_color = []
     len_values = len(all_values_mesh)
     
+    ax.collections[0].set_facecolor('none')
     for i in range(len_values) :
         if all_values_mesh[i] == 0 :
-            new_color.append((1,1,1,1))
+            new_color.append('white')
         else :
             new_color.append(all_color_mesh[i])
+
     mesh.set_facecolor(new_color)
-    
+
     # Modify axis and ticks
     ax.xaxis.set_ticks_position('top')
     ax.tick_params(axis='x', 
@@ -202,7 +205,7 @@ def number_genomes(ax, count_df, size='xx-small') :
     cmap = ListedColormap(['white'])
         
     df_count = count_df[['Count']].rename(columns={'Count':'Number\nof\ngenomes'})
-        
+    
     sns.heatmap(df_count,
                 cmap = cmap,
                 linewidths = 1,
@@ -211,7 +214,7 @@ def number_genomes(ax, count_df, size='xx-small') :
                 annot_kws = {'color':'black', 'fontsize':size},
                 cbar = False,
                 ax = ax,
-                fmt = "d",
+                fmt = ".0f",
                 yticklabels = False,
                )
     
@@ -227,7 +230,7 @@ def number_genomes(ax, count_df, size='xx-small') :
     ax.yaxis.set_label_text("")
     
     #ax.set_aspect(0.3)
-    
+
     return
 
 ##########################################################################################
@@ -293,7 +296,9 @@ def draw_tree_prok(tree_file, ax) :
     
     sns.despine(ax=ax, 
                 bottom=True,
-                left=True)   
+                left=True)  
+
+    ax.set_ylim(len(leaves)+0.5, 0.5)
 
     return leaves
 
@@ -373,7 +378,7 @@ def set_legend(count_df, ax, color_species=[], color_gradient='red', size='xx-sm
     ax.legend(handles = handles, 
               frameon = False,
               fontsize = size,
-              loc = 'lower left'
+              loc = 'lower center'
               )
 
     return 
@@ -455,6 +460,7 @@ def create_countdf(INFO_TAB, wanted_phylum) :
     '''
     
     INFO_TAB.loc[:,'Phylum'] = INFO_TAB.apply(Phylum_wanted_search, args=(wanted_phylum), axis=1)
+    INFO_TAB.loc[:,'Kingdom'] = INFO_TAB.Lineage.apply(lambda x : x.split(';')[0])
     
     count_df = INFO_TAB[INFO_TAB.Phylum.isin(wanted_phylum)] \
                             .drop_duplicates('Species_Id').groupby(['Kingdom', 'Phylum']) \
@@ -467,7 +473,7 @@ def create_countdf(INFO_TAB, wanted_phylum) :
 
 def make_figure_distribution(file_output, report_like, column_pivot, order_columns, INFO_TAB, file_tree, size='xx-small', rotation=0, 
                             main_rowspan = 5, tree_colspan = 2, heatmap_colspan = 8, barplot_rowspan = 1, base_span = 1,
-                            width=15, height=10, color='red') :
+                            width=15, height=10, color='red', add_span=0) :
     
     '''
     report at least columns : Replicon_name, column you want to count (e.g. Reference_system, Gene...)
@@ -502,11 +508,16 @@ def make_figure_distribution(file_output, report_like, column_pivot, order_colum
     :param width: Width total of the figure in point
     :type: int 
     :param height: Height total of the figure in point
+    :type: int
     :params color: Color of the heatmap
     :type: color in str, rgb or hex
+    :params add_span: blank columns to add after the tree if needed
+    :type: int
+    :return: Nothing
     '''
     
     fig = plt.figure(figsize=(width,height))
+    fig.set_tight_layout(True)
 
     nrow = barplot_rowspan + main_rowspan
     ncol = base_span + tree_colspan + heatmap_colspan
@@ -529,7 +540,7 @@ def make_figure_distribution(file_output, report_like, column_pivot, order_colum
     ax4 = plt.subplot2grid(shape = (nrow, ncol), 
                              loc = (main_rowspan,0), 
                              rowspan = base_span, 
-                             colspan = tree_colspan + add_span)
+                             colspan = tree_colspan + add_span + base_span)
 
     ax5 = plt.subplot2grid(shape=(nrow, ncol), 
                            loc=(main_rowspan,tree_colspan + add_span + base_span), 
@@ -540,6 +551,7 @@ def make_figure_distribution(file_output, report_like, column_pivot, order_colum
     # Draw tree on ax1
     leaves_order = draw_tree_prok(file_tree, ax1)
 
+
     # Read INFO_TAB
     info_df = pd.read_table(INFO_TAB)
 
@@ -547,7 +559,7 @@ def make_figure_distribution(file_output, report_like, column_pivot, order_colum
                                'Candidatus Saccharibacteria':'CPR',
                                'Candidatus Bipolaricaulota':'Bipolaricaulota',
                                'Candidatus Cloacimonetes':'Cloacimonetes',
-                               'Candidatus Dependentiae':'Dependentiae'})
+                               'Candidatus Dependentiae':'Dependentiae'}, regex=True)
 
     # Read report_like
     report_df = pd.read_table(report_like)
@@ -559,7 +571,9 @@ def make_figure_distribution(file_output, report_like, column_pivot, order_colum
     
     
     if 'Phylum' not in report_df.columns.tolist() :
-        report_df = report_df.merge(info_df, on='Replicon_name')
+        set_columns = set(info_df.columns.tolist()) - set(report_df.columns.tolist())
+        infoDF_columns = list(set_columns) + ['Replicon_name']
+        report_df = report_df.merge(info_df.loc[:,infoDF_columns], on='Replicon_name')
     else :
         report_df.loc[:,'Phylum'] = report_df.apply(Phylum_wanted_search, args=(leaves_order),  axis=1)
     
@@ -578,10 +592,122 @@ def make_figure_distribution(file_output, report_like, column_pivot, order_colum
     # Draw proportion
     proportion_proteobacteria(report_df, report_pivot.columns, ax5, column_pivot, size=size)
 
-    plt.tight_layout()
     
+    #plt.tight_layout()
     plt.savefig(file_output)
 
+    return
+
+##########################################################################################
+##########################################################################################
+
+def make_figure_distribution_gridspec(file_output, report_like, column_pivot, order_columns, INFO_TAB, file_tree, size='xx-small', rotation=0, 
+                            main_rowspan = 5, tree_colspan = 2, heatmap_colspan = 8, barplot_rowspan = 1, base_span = 1,
+                            width=15, height=10, color='red', add_span=0) :
+    
+    '''
+    report at least columns : Replicon_name, column you want to count (e.g. Reference_system, Gene...)
+    INFO_TAB at least : Replicon_name, Species_Id, Lineage
+
+    :param fill_output: Path to the output
+    :type: str
+    :param report_like: Dataframe that contains information about the lineage, the species_id
+    :type: pandas.DataFrame
+    :param columns_pivot: Name of the columns to do the pivot table on
+    :type: str
+    :param order_columns: ordered list with the columns in the order wanted in the final figure
+    :type: list of str
+    :param INFO_TAB: Table with the information about the genome, the species and the lineage
+    :type: pandas.DataFrame    
+    :param file_tree: Path to the rooted tree file in newick format : ((A,B),(C, D), E)
+    :type: str    
+    :param size: Font size in points or as a string (e.g., 'large')
+    :type: float or str    
+    :param rotation: The angle to which the label of the heatmap to rotate
+    :type: int
+    :param main_rowspan: Number of rows you wanted the tree and heatmap to be span
+    :type: int
+    :param tree_colspan: Number of columns you want the tree to be span
+    :type: int
+    :param heatmap_colspan: Number of columns you want the heatmap to be span
+    :type: int
+    :param barplot_rowspan: Number of rows you want the barplot to be span bellow the heatmap
+    :type: int
+    :param base_span: Number of columns or row a figure is span by default (mostly for the legend and the number of genomes)
+    :type: int
+    :param width: Width total of the figure in point
+    :type: int 
+    :param height: Height total of the figure in point
+    :type: int
+    :params color: Color of the heatmap
+    :type: color in str, rgb or hex
+    :params add_span: blank columns to add after the tree if needed
+    :type: int
+    :return: Nothing
+    '''
+    
+    fig = plt.figure(figsize=(width,height))
+    # fig.set_tight_layout(True)
+
+    nrow = barplot_rowspan + main_rowspan
+    ncol = base_span + tree_colspan + heatmap_colspan
+
+    gs = gridspec.GridSpec(nrow, ncol)
+
+    ax1 = fig.add_subplot(gs[:main_rowspan, :tree_colspan])
+    ax2 = fig.add_subplot(gs[:main_rowspan, tree_colspan:(tree_colspan+base_span)])
+    ax3 = fig.add_subplot(gs[:main_rowspan, -heatmap_colspan:])
+    ax4 = fig.add_subplot(gs[-1, :(tree_colspan+base_span)])
+    ax5 = fig.add_subplot(gs[-1, -heatmap_colspan:])
+
+    # Draw tree on ax1
+    leaves_order = draw_tree_prok(file_tree, ax1)
+
+    # Read INFO_TAB
+    info_df = pd.read_table(INFO_TAB)
+
+    info_df = info_df.replace({'Candidatus Gracilibacteria':'CPR',
+                               'Candidatus Saccharibacteria':'CPR',
+                               'Candidatus Bipolaricaulota':'Bipolaricaulota',
+                               'Candidatus Cloacimonetes':'Cloacimonetes',
+                               'Candidatus Dependentiae':'Dependentiae'}, regex=True)
+
+    # Read report_like
+    report_df = pd.read_table(report_like)
+
+    # Reorder count_df based on leaves order
+    count_df = create_countdf(info_df, leaves_order)
+    count_df = count_df.reindex(leaves_order)
+    count_df = count_df[['Count']]
+    
+    
+    if 'Phylum' not in report_df.columns.tolist() :
+        set_columns = set(info_df.columns.tolist()) - set(report_df.columns.tolist())
+        infoDF_columns = list(set_columns) + ['Replicon_name']
+        report_df = report_df.merge(info_df.loc[:,infoDF_columns], on='Replicon_name')
+    else :
+        report_df.loc[:,'Phylum'] = report_df.apply(Phylum_wanted_search, args=(leaves_order),  axis=1)
+    
+    report_pivot = make_pivot(report_df, column_pivot, leaves_order, order_columns)
+
+    # Draw number of genomes in dataset
+    number_genomes(ax2, count_df, size=size)
+
+    # draw big heatmap
+    heatmap_df(report_pivot, count_df, leaves_order, ax3, size=size, rotation=rotation, color_gradient=color)
+    
+    # Draw legends
+    set_legend(count_df, ax4, color_gradient=color, size=size)
+
+    # Draw proportion
+    proportion_proteobacteria(report_df, report_pivot.columns, ax5, column_pivot, size=size)
+
+    
+    #plt.tight_layout()
+    gs.tight_layout(fig)
+    plt.savefig(file_output)
+
+    return
 
 ##########################################################################################
 ##########################################################################################

@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'library'))
 
 from utils import create_folder
 from construct_fig import make_figure_distribution
+from construct_fig import make_figure_distribution_gridspec
 
 ##########################################################################################
 ##########################################################################################
@@ -164,7 +165,7 @@ COLOR = args.color_heatmap
 
 def main():
 
-    make_figure_distribution(file_output = OUTPUT,
+    make_figure_distribution_gridspec(file_output = OUTPUT,
                          report_like = REPORT, 
                          column_pivot = COLUMN, 
                          order_columns = ORDER_COLUMNS,
