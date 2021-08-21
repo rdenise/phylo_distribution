@@ -23,6 +23,8 @@ from Bio import Phylo
 
 import seaborn as sns ; sns.set_style("ticks") 
 
+plt.rcParams['svg.fonttype'] = 'none' # Editable svg text
+
 ##########################################################################################
 ##########################################################################################
 ##
