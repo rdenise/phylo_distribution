@@ -23,7 +23,12 @@ from Bio import Phylo
 
 import seaborn as sns ; sns.set_style("ticks") 
 
-plt.rcParams['svg.fonttype'] = 'none' # Editable svg text
+plt.rcParams['text.color'] = 'black'
+plt.rcParams['svg.fonttype'] = 'none'  # Editable SVG text
+plt.rcParams['pdf.fonttype'] = 42
+plt.rcParams['ps.fonttype'] = 42
+plt.rcParams['font.family'] = 'Arial'
+plt.rcParams['font.weight'] = 'light'
 
 ##########################################################################################
 ##########################################################################################
@@ -281,7 +286,7 @@ def draw_tree_prok(tree_file, ax) :
             # t.set_text("{:>{width}}".format(t.get_text().strip(), width=biggest_leaves))
             # t.set_fontproperties("monospace")
             t.set_zorder(-1)
-            leaves.append(t.get_text().strip()) # get leaves as they are when reading the tree from top to bottom
+            leaves.append(t.get_text().strip().replace('_', ' ').replace('T.', 'Thermodesulfobium')) # get leaves as they are when reading the tree from top to bottom
 
             
     ax.tick_params(axis='both', 
