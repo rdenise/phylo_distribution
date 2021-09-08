@@ -400,8 +400,11 @@ def Phylum_wanted_search(x, *wanted_phylum) :
     :return: The phylum of the species
     :rtype: str
     """
+    a = list(set(x.Lineage.split(';')) & set(wanted_phylum))
 
-    a = list(set(x.Lineage.replace(' ', ';').split(';')) & set(wanted_phylum))
+    if not a :
+        a = list(set(x.Lineage.replace(' ', ';').split(';')) & set(wanted_phylum))
+
     return a[0] if a else 'phylum_not_in_list'
 
 ##########################################################################################
@@ -560,7 +563,8 @@ def make_figure_distribution(file_output, report_like, column_pivot, order_colum
     info_df = info_df.replace({'Candidatus Gracilibacteria':'CPR',
                                'Candidatus Saccharibacteria':'CPR',
                                'Candidatus Bipolaricaulota':'Bipolaricaulota',
-                               'Candidatus Cloacimonetes':'Cloacimonetes',
+                               'Candidatus Omnitrophica':'Omnitrophica',
+                               'Candidatus Cloacimonetes':'Cloacimonetes', 
                                'Candidatus Dependentiae':'Dependentiae'}, regex=True)
 
     # Read report_like
@@ -576,8 +580,9 @@ def make_figure_distribution(file_output, report_like, column_pivot, order_colum
         set_columns = set(info_df.columns.tolist()) - set(report_df.columns.tolist())
         infoDF_columns = list(set_columns) + ['Replicon_name']
         report_df = report_df.merge(info_df.loc[:,infoDF_columns], on='Replicon_name')
-    else :
-        report_df.loc[:,'Phylum'] = report_df.apply(Phylum_wanted_search, args=(leaves_order),  axis=1)
+
+    # Convert name to name in tree
+    report_df.loc[:,'Phylum'] = report_df.apply(Phylum_wanted_search, args=(leaves_order),  axis=1)
     
     report_pivot = make_pivot(report_df, column_pivot, leaves_order, order_columns)
 
@@ -670,6 +675,7 @@ def make_figure_distribution_gridspec(file_output, report_like, column_pivot, or
 
     info_df = info_df.replace({'Candidatus Gracilibacteria':'CPR',
                                'Candidatus Saccharibacteria':'CPR',
+                               'Microgenomates group incertae sedis':'CPR',
                                'Candidatus Bipolaricaulota':'Bipolaricaulota',
                                'Candidatus Cloacimonetes':'Cloacimonetes',
                                'Candidatus Dependentiae':'Dependentiae'}, regex=True)
